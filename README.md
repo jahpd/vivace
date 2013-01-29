@@ -54,11 +54,21 @@ Download nodejs and install it:
 Install vivace dependencies:
 
     $ cd vivace/
-    $ npm install
-    
+    $ npm install share express
+    $ npm install jade stylus
+
+For developers, some conveniency:
+
+    $ npm install -g nodemon
+    $ npm install jison coffee-script
+     
 Run:
 
     $ node server.js
+
+or for developing environment
+
+    $ nodemon server.js
 
 Open [http://localhost:5000]() on your Chrome or Safari browser. You
 can even share this URL with others and live code together.
@@ -69,8 +79,7 @@ Copy some audio (wav, mp3, ogg) or video (mp4, webm, ogv) to *media/*:
 
     $ cp *.wav vivace/media/
 
-And edit file vivace_exec.js, to map variable names to your files:
+And edit file public/coffeescripts/api.coffee, to map variable names to your files:
 
-    var files = [{name: 'a', fileName: 'kick.wav', type: 'audio'},
+    Vivace.environment = [{name: 'a', fileName: 'kick.wav', type: 'audio'},
                  {name: 'b', fileName: 'foo.mp4', type: 'video'}]
-
