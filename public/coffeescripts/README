@@ -1,0 +1,2 @@
+After code the coffeescripts do in terminal, in coffescrpts folder:
+coffee -o ../javascripts -c ./

@@ -1,0 +1,19 @@
+// This is a default code to Vivace-0.0.2
+
+// First of all, we have some voices, i.e., 
+// each variable is audio or video
+// and each audio can be manipulate by
+// some methods defined as .pos .dur and .gdur
+
+// our a is a audio; the manipulated audio will 
+// loop for each:
+// -position: the current position of an sample, [frame, second?] position
+// -dur: duration
+// -gdur: grain duration
+a.pos = [1, 2, 3, 4, 5]
+a.dur = [5, 4, 3, 2]
+a.gdur = [.1, .2, .3]
+
+b.pos = [2, 3, 4, 5]
+b.dur = [4, 3, 2]
+b.gdur = [.2, .3]
