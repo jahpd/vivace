@@ -8,6 +8,28 @@ video {
   width: 100%;
   height: 100%;
   position: absolute;
+  z-index: 1000;
+}
+input {
+  width: 80%;
+  height: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  visibility: visible;
+  z-index: 1002;
+  line-height: 1.1em;
+  color: transparent;
+  background-color: transparent;
+  -webkit-transition: color 1500ms;
+  outline: none;
+}
+input:hover {
+  color: #fff;
+  text-shadow: #000 0px 0px 4px;
 }
 .ban {
   font-family: monospace;
@@ -22,47 +44,25 @@ video {
   -moz-transition: color ox-shadow 500ms;
   -ms-transition: color 500ms;
 }
-.ban:hover {
-  color: #aaa;
-}
 .ban ul {
   list-style-type: none;
-  padding-right: 5%;
+  display: inline;
+  padding-right: 0.5em;
+}
+.ban:hover {
+  color: #aaa;
 }
 .ban ul:hover {
   color: #aaa;
 }
 .ban ul li {
-  padding-right: 5%;
+  list-style-type: none;
+  display: inline;
+  padding-right: 0.5em;
 }
 .ban ul li a {
   color: transparent;
   text-shadow: #555 0px 0px 2px;
-}
-#code {
-  width: 100%;
-  height: 100%;
-  color: transparent;
-  background-color: transparent;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  padding: 24px;
-  padding-top: 42px;
-  padding-bottom: 42px;
-  line-height: 1.1em;
-  font-family: monospace;
-  font-size: 18px;
-  font-weight: bold;
-  visibility: visible;
-  z-index: 1000;
-/* transition between transparent and semi-transparent black on hover */
-  transition: color 1500ms;
-  -webkit-transition: color 1500ms;
-  -o-transition: color 500ms;
-  -moz-transition: color ox-shadow 500ms;
-  -ms-transition: color 500ms;
-  outline: none;
 }
 #banner {
   position: absolute;
@@ -70,8 +70,4 @@ video {
   bottom: 0px;
   padding: 24px;
   z-index: 1001;
-}
-#code:hover {
-  color: #fff;
-  text-shadow: #000 0px 0px 4px;
 }

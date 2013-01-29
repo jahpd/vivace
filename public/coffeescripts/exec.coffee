@@ -1,73 +1,39 @@
-exec = (input) ->
-	tree = vivace.parse(input);
-	definitions = tree.code.definitions;
+## ./vivace_exec.coffee
+## VIVACE EXEC INPUT CODE MODULE
+#check the medias
 
-	// go to all definitions again and update voices details
-	voiceNames=[]
-	for definition in definitions
-		voiceName = definition.name.val;
-		voiceNames[voiceName]=true;
-		if definition.attr.val == 'sig'
-			if definition.is.type === 'chains'
-				// for now, just dealing with audio('id') and video('id')
-				if definition.is.val[0].name.val === 'audio'
-					voices[voiceName].sig = definition.is.val[0].parameters[0].val
-					voices[voiceName].sigType = 'audio'
-				else if (definitions[i].is.val[0].name.val === 'video'
-					voices[voiceName].sig = definition.is.val[0].parameters[0].val
-					voices[voiceName].sigType = 'video'
-		// amp
-		else if definition.attr.val === 'amp'
-			// [ ]
-			if definition.is.type === 'values'
-				amp = []
-				for (var j=0; j<definitions[i].is.val.length; j=j+1) {
-					amp.push(definitions[i].is.val[j].val);
-				}
-				voices[voiceName].amp = amp.reverse();
-				// { }
-			} else if (definitions[i].is.type === 'durations') {
-				var dur = [];
-				for (var j=0; j<definitions[i].is.val.length; j=j+1) {
-					dur.push(definitions[i].is.val[j].val);
-				}
-				voices[voiceName].dur = dur.reverse();
-			}
-			// pos
-		} else if (definitions[i].attr.val === 'pos') {
-			// [ ]
-			if (definitions[i].is.type === 'values') {
-				var pos = [];
-				for (var j=0; j<definitions[i].is.val.length; j=j+1) {
-					pos.push(definitions[i].is.val[j].val);
-				}
-				voices[voiceName].pos = pos.reverse();
-				// { }
-			} else if (definitions[i].is.type === 'durations') {
-				var dur = [];
-				for (var j=0; j<definitions[i].is.val.length; j=j+1) {
-					dur.push(definitions[i].is.val[j].val);
-				}
-				voices[voiceName].dur = dur.reverse();
-			}
-			// gdur
-		} else if (definitions[i].attr.val === 'gdur') {
-			// [ ]
-			if (definitions[i].is.type === 'values') {
-				var gdur = [];
-				for (var j=0; j<definitions[i].is.val.length; j=j+1) {
-					gdur.push(definitions[i].is.val[j].val);
-				}
-				voices[voiceName].gdur = gdur.reverse();
-				// { }
-			} else if (definitions[i].is.type === 'durations') {
-				var dur = [];
-				for (var j=0; j<definitions[i].is.val.length; j=j+1) {
-					dur.push(definitions[i].is.val[j].val);
-				}
-				voices[voiceName].dur = dur.reverse();
-			}
-		}
-	}
-	return [voices,voiceNames];
-}
+pushMethod = (def) -> Vivace.voices[def.name.val][def.attr.val] = def.is.val.reverse()
+Vivace.voices.enable = (name) -> Vivace.voices[name].isAvailable = true
+Vivace.voices.unable = (name) -> Vivace.voices[name].isAvailable = false
+	
+exec = (lang, input, callback) ->
+	#add support to multiple tastes of vivace
+	tree = null
+	if lang == 'vivace_lang' then tree = window.vivace_lang.parse input
+	
+	exec_voices = 
+		current: Vivace.voices
+		active: []
+
+	#return a modified copy of Vivace.voices
+	$.each tree.code.definitions, (i, definition) -> 
+		#stop to update in future
+		Vivace.voices.unable definition.name.val
+	
+		#add method from code
+		pushMethod definition
+		
+		#add the active voice once
+		if exec_voices.active.length == 0
+			exec_voices.active.push definition.name.val
+		else  
+			#check if the voice is alredy in array
+			haveElement = exec_voices.active.indexOf(definition.name.val) >= 0
+			if !haveElement then exec_voices.active.push definition.name.val
+	
+	callback(exec_voices)
+	
+	
+#expose exec module
+if !window.Vivace then window.Vivace = {}
+window.Vivace.exec = exec

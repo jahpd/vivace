@@ -3,12 +3,23 @@ html
 	head
 		title #{title}
 		link(rel='stylesheet', href='stylesheets/vivace.css')
-		script(src="http://code.jquery.com/jquery-1.8.2.min.js")
+		script(src="javascripts/jquery-1.8.3.js")
 		script(src="javascripts/popcorn.min.js")
+		script(src="javascripts/dat.gui.min.js")
+		script(src="javascripts/vivace/api.js")
 		script(src="channel/bcsocket.js")
 		script(src="share/share.js")
 		script(src="share/textarea.js")
+		script(src="javascripts/vivace/configure.js")
+		
+		
 	body
-		input#code(spellcheck="false")
+		video
 		div#banner.ban #{title}
-		script(src="javascripts/share.js")
+		script(type="text/javascript" )
+			// run only when last audio node was loaded in fizzy
+			$('div.dg:last').ready(function(e){
+				Vivace.run()
+			})
+		input#code
+			\/\/this is a code
