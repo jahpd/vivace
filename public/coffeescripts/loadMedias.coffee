@@ -1,47 +1,37 @@
 Vivace.loadMedias = (callback) ->
 	#loop through provided environment
-	voices = Vivace.voices
-	
 	#get all mixer parameters
-	$.each voices, (name, voice) ->
-		#callback
-		if voice.sigType=='audio' then callback name, voice.sig, voice.sigType, Vivace.loadAudioFile
-		if voice.sigType=='video' then callback name, voice.sig, voice.sigType, Vivace.loadVideoFile
+	$.each Vivace.voices, (name, voice) ->
+		if voice.sigType=='audio' then callback name, voice, Vivace.loadAudioFile
+		if voice.sigType=='video' then callback name, voice, Vivace.loadVideoFile
 
-Vivace.loadAudioFile = (voicename, filename, filetype, audioFilesDir='../../audios/') ->
+_options = (voicename, buffer) ->
+	sr = Vivace.audiocontext.sampleRate / 2
+	opt = 
+		'buffer': buffer
+		'pan': {min: -1, max: 1, onChange: (value) -> 
+			v = value * 10
+			Vivace.audionodes[voicename].setPosition(0, v, 0)
+			console.log voicename+'(pan):'+value
+		}
+		'gain':{min: 0, max: 1, onChange: (value) -> 
+			Vivace.audionodes[voicename].gain.value = value
+			console.log voicename+'(gain):'+value
+		}
+		#filters:
+		#	high:{ active:{value:false, onChange: (value) ->}, type: 1, max: sr, min: sr/2000, Q: {value: 1, onChange: (value) -> },  gain: {value: 0, onChange: (value) -> }
+		#	low:{ active:{value:false, onChange: (value) ->}, type: 0, max: sr, min: sr/2000, Q: {value: 1, onChange: (value) -> },  gain: {value: 0, onChange: (value) -> }
+					
+Vivace.loadAudioFile = (voicename, filename, callback, audioFilesDir='../../audios/') ->
 	request = new XMLHttpRequest();
 	url = audioFilesDir + filename;
 	request.open 'GET', url, true;
 	request.responseType = 'arraybuffer';
-
-	request.onload = () ->
-		#add some audio nodes
-		Vivace.audiocontext.decodeAudioData request.response, (buffer) -> 
-			options = 
-				buffer: buffer
-				pan: [-1, 1]
-				gain: [0, 1]
-			
-			#route created audio nodes according are loaded the audio
-			Vivace.mixer.create voicename, options, (audionodes, controls) -> 
-				#Apply audio routing 
-				audionodes.src.connect(audionodes.pan)
-				audionodes.pan.connect(audionodes.gain)	
-				audionodes.gain.connect(Vivace.audiocontext.destination)
-				
-				#Apply audio controler listeners
-				controls.pan.onChange (value) -> audionodes.pan.setPosition(value * 10, 0, 0)
-				controls.gain.onChange (value) -> audionodes.gain.gain.value = value
-				
-				$.each audionodes, (k, v) -> 
-					console.log k+' added to '+voicename+': '+v
-					if k != 'src' then console.log 'added listeners to '+k
-					
+	request.onload = () -> Vivace.audiocontext.decodeAudioData request.response, (buffer) -> callback voicename, _options(voicename, buffer)					
 	request.onerror = () -> console.log 'error while loading audio file from ' + url
-	
 	request.send()
 
-Vivace.loadVideoFile = (voicename, filename, filetype, audioFilesDir='../../videos/') ->
+Vivace.loadVideoFile = (voicename, filename, audioFilesDir='../../videos/') ->
 	vid = document.getElementsByTagName('video')[0];
 	vid.src = audioFilesDir + filename;
 	vid.id = 'voice_'+voicename;

@@ -14,12 +14,15 @@ html
 		
 		
 	body
-		video
 		div#banner.ban #{title}
-		script(type="text/javascript" )
-			// run only when last audio node was loaded in fizzy
-			$('div.dg:last').ready(function(e){
-				Vivace.run()
+		textarea#vivace_command
+		video
+		script(type="text/javascript")
+			$(document).ready(function(){
+				var textarea = document.getElementById('vivace_command');
+				sharejs.open('vivace_command', 'text', function(error, doc){
+					if(error) throw new Error();
+					elem.disabled = false;
+					doc.attach_textarea(textarea);
+				})
 			})
-		input#code
-			\/\/this is a code

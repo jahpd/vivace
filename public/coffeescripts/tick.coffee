@@ -23,7 +23,7 @@ tick = (voicename, callback) ->
 
 	$.each events, (eventname, event) ->
 		if eventname == 'id'
-			if event == voice._name
+			if event == voicename
 				voice = allvoices[event]
 				lastVoice = lastVoices[event]
 				_durDict = dict lastVoice, 'dur'

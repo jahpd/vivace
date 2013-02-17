@@ -1,15 +1,16 @@
+OSX = 
+	enter: 13
+	command: 91
+	point: 190
+
+LINUX = {}
+WINDOWS = {}
+
 Vivace.keyEvents = keyEvents =  
 	keys: 
-		enter: 
-			ref: 13
-			val: false
-		command: 
-			ref: 91
-			val: false
-		point: 
-			ref: 190
-			val: false
-		
+		enter: {ref: OSX.enter, val: false}
+		ctrl: {ref: OSX.command, val: false}
+		point: {ref: OSX.point, val: false}
 	run: (c, e, p, lastVoices) ->
 		if c and e
 			$.each lastVoices, (i, voiceRef) ->
@@ -21,22 +22,19 @@ Vivace.keyEvents = keyEvents =
 window.Vivace.keyboard = 
 	runvoices: (c, e, p) -> keyEvents.run c, e, p,  Vivace.lastVoices				
 	onkeyup: (e) -> 
-		if e.which == keyEvents.keys.command.ref then keyEvents.keys.command.val=false	#command (MacOS)
-		if e.which == keyEvents.keys.enter.ref then keyEvents.keys.enter.val=false		#Return (MacOS)
-		if e.which == keyEvents.keys.point.ref then keyEvents.keys.point.val=false		#point (MacOS)
+		if e.which == keyEvents.keys.ctrl.ref then keyEvents.keys.ctrl.val=false	
+		if e.which == keyEvents.keys.enter.ref then keyEvents.keys.enter.val=false		
+		if e.which == keyEvents.keys.point.ref then keyEvents.keys.point.val=false		
 		
 	onkeydown: (e) -> 
-		if e.which == keyEvents.keys.command.ref then keyEvents.keys.command.val=true	#command (MacOS)
-		if e.which == keyEvents.keys.enter.ref then keyEvents.keys.enter.val=true		#Return (MacOS)
+		if e.which == keyEvents.keys.ctrl.ref then keyEvents.keys.ctrl.val=true	
+		if e.which == keyEvents.keys.enter.ref then keyEvents.keys.enter.val=true		
 		if e.which == keyEvents.keys.point.ref then keyEvents.keys.point.val=true
 		
-		Vivace.keyboard.runvoices keyEvents.keys.command.val, 
-			keyEvents.keys.enter.val, 
-			keyEvents.keys.point.val
+		Vivace.keyboard.runvoices keyEvents.keys.ctrl.val, keyEvents.keys.enter.val, keyEvents.keys.point.val
 	
 	#enable the Vivace.keyboard
 	create: (callback) ->
 		document.onkeydown=Vivace.keyboard.onkeyup;
 		document.onkeydown=Vivace.keyboard.onkeydown;
-		callback(Vivace.keyEvents.keys) 		
-
+		if callback then callback(Vivace.keyEvents.keys) 		

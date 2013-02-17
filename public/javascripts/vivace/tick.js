@@ -30,7 +30,7 @@
     return $.each(events, function(eventname, event) {
       var lastVoice, voice, _durDict, _durId, _gdurDict, _gdurId, _graintime, _offset, _pos, _posDict, _posId, _time;
       if (eventname === 'id') {
-        if (event === voice._name) {
+        if (event === voicename) {
           voice = allvoices[event];
           lastVoice = lastVoices[event];
           _durDict = dict(lastVoice, 'dur');

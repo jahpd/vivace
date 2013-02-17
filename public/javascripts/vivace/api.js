@@ -73,18 +73,16 @@
 
   Vivace.isRunning = false;
 
-  Vivace.loadscripts = function(scripts, callback) {
+  Vivace.onload = function(src, callback) {
     var folder, start;
     folder = 'javascripts/vivace/';
     start = {};
-    return $.each(scripts, function(i, src) {
-      return $('body').ready(function() {
-        var $script;
-        $script = $('<scr' + 'ipt/>').attr('type', 'text/javascript');
-        $script.attr('src', folder + src + '.js');
-        $('body').append($script);
-        return callback(start, src);
-      });
+    return $('body').ready(function() {
+      var $script;
+      $script = $('<scr' + 'ipt/>').attr('type', 'text/javascript');
+      $script.attr('src', folder + src + '.js');
+      $('body').append($script);
+      return callback();
     });
   };
 

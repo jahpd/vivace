@@ -1,7 +1,6 @@
 #./playVoice.coffee
 
 playVoice = (voicename, time, offset, duration) ->
-	
 	voice = Vivace.voices[voicename]
 	try
 		source = voice.audionodes.src

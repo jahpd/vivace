@@ -2,10 +2,10 @@
 (function() {
   var init;
 
-  init = function(environment, callback) {
+  init = function(callback) {
     var voices;
     voices = window.Vivace.voices;
-    $.each(environment, function(i, variable) {
+    $.each(Vivace.environment, function(i, variable) {
       voices[variable.name] = {
         sig: variable.fileName,
         sigType: variable.type,

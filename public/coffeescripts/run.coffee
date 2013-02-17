@@ -2,24 +2,13 @@
 
 voices = window.Vivace.voices
 lastvoices = window.Vivace.lastvoices
-
-apply = (text, callback) ->
-	currentVoices = null
-	activeVoices = null
-	Vivace.exec 'vivace_lang', text, (exec_voices) ->
-		confLastVoices exec_voices	
-		console.log "text coded objects:"
-		console.log exec_voices
-		callback()
 			
 loadcode = (filename, callback) ->
 	request = new XMLHttpRequest();
 	url = '../../codes/' + filename
 	request.open 'GET', url, true;
 	request.responseType = 'text'
-	request.onload = () ->
-		console.log 'code loaded:\n'
-		callback(request.response)
+	request.onload = () -> callback(request.response)
 	request.onerror = () -> console.log 'error while loading audio file from ' + url
 	request.send()
 
@@ -62,10 +51,14 @@ confLastVoices = (runvoice) ->
 		Vivace.voices.enable voicename
 		
 run = () -> 
+	#load code, and then put it on input and say that Vivace is Running
 	loadcode 'default.vivace', (code) ->
-		#load code, and then put it on input and say that Vivace is Running
-		apply code, () -> 
-			#$('<input/>').html(code).attr('id', 'code').appendTo($('body'))
+		$('textarea').text(code)
+		Vivace.exec 'vivace_lang', code, (exec_voices) ->
+			confLastVoices exec_voices	
+			console.log "text coded objects:"
+			console.log exec_voices
 			window.Vivace.isRunning = true
+			
 		
 window.Vivace.run = run

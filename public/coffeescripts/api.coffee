@@ -16,10 +16,9 @@ Vivace.events =
 	id:[]
 	currentbeat:[]
 	nextbeat:[]
-	push: (o) -> 
-		$.each o, (k, v) -> 
-			if k == 'id' or  k == 'currentbeat' or  k == 'nextbeat' then Vivace.events[k].push v
+	push: (o) -> $.each o, (k, v) -> if k == 'id' or  k == 'currentbeat' or  k == 'nextbeat' then Vivace.events[k].push v
 			
+# Active voices
 Vivace.voices = {};
 Vivace.lastVoices = null;
 
@@ -45,19 +44,13 @@ else
     
 Vivace.isRunning = false
 
-Vivace.loadscripts = (scripts, callback) ->
+Vivace.onload = (src, callback) ->
 	folder='javascripts/vivace/'
 	start = {}
-	$.each scripts, (i, src) ->
-		$('body').ready () ->
-			$script = $('<scr'+'ipt/>').attr 'type', 'text/javascript'
-			$script.attr 'src', folder+src+'.js'
-			$('body').append $script
-			callback start, src	
-		#script = document.createElement 'script'
-		#script.src = folder+src+'.js'
-		#body = document.getElementsByTagName('body')[0]
-		#body.appendChild(script)
-		
+	$('body').ready () ->
+		$script = $('<scr'+'ipt/>').attr 'type', 'text/javascript'
+		$script.attr 'src', folder+src+'.js'
+		$('body').append $script
+		callback()
 	
 window.Vivace = Vivace	

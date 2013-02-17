@@ -10,8 +10,11 @@ video {
   position: absolute;
   z-index: 1000;
 }
-input {
-  width: 80%;
+.dg.ac {
+  z-index: 1001;
+}
+textarea {
+  width: 70%;
   height: 100%;
   position: absolute;
   left: 0px;
@@ -21,15 +24,22 @@ input {
   font-weight: bold;
   visibility: visible;
   z-index: 1002;
+  padding: 24px;
+  padding-top: -24px;
+  padding-bottom: 24px;
   line-height: 1.1em;
   color: transparent;
   background-color: transparent;
+  transition: color 1500ms;
   -webkit-transition: color 1500ms;
+  -o-transition: color 500ms;
+  -moz-transition: color ox-shadow 500ms;
+  -ms-transition: color 500ms;
   outline: none;
 }
-input:hover {
+textarea:hover {
   color: #fff;
-  text-shadow: #000 0px 0px 4px;
+  text-shadow: #aaa 0px 0px 4px;
 }
 .ban {
   font-family: monospace;
