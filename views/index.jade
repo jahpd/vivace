@@ -1,28 +1,9 @@
-!!! 5
-html
-	head
-		title #{title}
-		link(rel='stylesheet', href='stylesheets/vivace.css')
-		script(src="javascripts/jquery-1.8.3.js")
-		script(src="javascripts/popcorn.min.js")
-		script(src="javascripts/dat.gui.min.js")
-		script(src="javascripts/vivace/api.js")
-		script(src="channel/bcsocket.js")
-		script(src="share/share.js")
-		script(src="share/textarea.js")
-		script(src="javascripts/vivace/configure.js")
-		
-		
-	body
-		div#banner.ban #{title}
-		textarea#vivace_command
-		video
-		script(type="text/javascript")
-			$(document).ready(function(){
-				var textarea = document.getElementById('vivace_command');
-				sharejs.open('vivace_command', 'text', function(error, doc){
-					if(error) throw new Error();
-					elem.disabled = false;
-					doc.attach_textarea(textarea);
-				})
-			})
+exports layout
+  
+block content  
+  textarea#vivace_command.fx
+  canvas#vivace_canvas
+  ul#banner.fx #{title}
+    - for el in menu
+      li.fx 
+        a(href=el.href) #{el.text}

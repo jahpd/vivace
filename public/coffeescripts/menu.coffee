@@ -13,28 +13,42 @@ menu =
 			]
 		help:[
 			{name: 'using vivace'}
+			{name: 'soundcloud authentication'}
 			{name: 'enabled variables'}
 			]
 		ui:[
 			{name: 'using vivace ui for mixing'}
 			]
+			
 	create: (css, o, callback) ->
 		c = () ->
 			if $(this).children().is ':visible'
 				$(this).children().hide '200'
 			else
 				$(this).children().show '200'
-		$vivacemenu = $(css).click(c).addClass 'ban'
+		
+		# the graphical menu
+		Vivace.menu.ui = $(css).click(c).addClass 'ban'
+		
 		$.each o, (k, v) ->
 			#get the vivace menu and add click handler
-			$div = $('<ul/>').html(k).addClass('ban').click c
+			Vivace.menu.ui[k] = $('<ul/>').html(k).addClass('ban').click c
+			
 			#put an html link
 			$.each v, (i, e) ->
 				href = e['href'] || '#'
-				$a = $('<a/>').html(e['name']).attr('href', href)
-				$('<li/>').append($a).appendTo $div
+				name = e['name'] || 'DEFAULT_NAME'
+				callbackFunc = e['callback'] || false
+				
+				Vivace.menu.ui[k].item = $('<li/>')
+				Vivace.menu.ui[k].itemlink= $('<a/>').html(e['name']).attr('href', href)
+				
+				if callbackFunc 
+					Vivace.menu.ui[k].itemlink.click callbackFunc
+					
+				Vivace.menu.ui[k].append(Vivace.menu.ui[k].link).appendTo $ul
 			
-			$div.appendTo($vivacemenu).hide 'slow'
+			$ul.appendTo(Vivace.menu.ui).hide 'slow'
 			callback(k)
 		return 
 

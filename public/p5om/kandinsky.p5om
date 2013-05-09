@@ -1,0 +1,30 @@
+# a json like file to define Processing (P5) sketchs
+# based on coffeescript syntax
+# syntax: 
+# -object (like json)
+# 	-my: personal objects
+#	-setup: a function where you can call objects like my and p5 (standart way to call processing instance) in setup configuration
+#	-draw: a function where you can call objects like my and p5 in draw loops
+
+{
+	my: 
+		balls: new Ball() for i in [0..5]
+		lines: new Line() for i in [0..5]
+	setup: () ->
+		p5.smooth()
+		for ball in my.balls
+			ball.x Math.rand(0,1)*processing.width 
+			ball.y Math.rand(0,1)*processing.height
+			ball.w Math.rand(0,0.71)*processing.width
+			ball.h Math.rand(0,0.71)*processing.height
+		for line in my.lines
+			line.x Math.rand(0,1)*processing.width
+			line.y Math.rand(0,1)*processing.height
+			line.w Math.rand(0,0.71)*processing.width
+			line.h Math.rand(0,0.71)*processing.height
+	draw: () ->	
+		processing.background 0
+		ball.draw() for ball in my.balls 
+		line.draw() for line in my.lines 
+}
+

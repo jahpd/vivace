@@ -1,12 +1,14 @@
 {
   "name": "vivace",
   "description": "Live coding language for Web",
-  "author": "Vilson Vieira <vilson@void.cc>, Renato Fabbri <renatofabbri@gmail.com>",
+  "author": "Vilson Vieira <vilson@void.cc>, Renato Fabbri <renatofabbri@gmail.com>", Guilherme Lunhani <gcravista@gmail.com>
   "version": "0.0.4",
   "private": true,
   "dependencies": {
     "express": "3.x",
     "share": "*"
+    "jade": "*"
+    "stylus": "*"
   },
   "engines": {
     "node": "0.8.x",

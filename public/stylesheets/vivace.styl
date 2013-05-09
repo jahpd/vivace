@@ -12,6 +12,18 @@ video
 
 .dg.ac
 	z-index 1001
+
+.fx
+	color transparent
+	background-color transparent
+	transition color 1500ms
+	-webkit-transition color 1500ms
+	-o-transition color 500ms
+	-moz-transition color ox-shadow 500ms
+	-ms-transition color 500ms
+	
+canvas
+	z-index 1000
 	
 textarea 
 	width 70%
@@ -28,17 +40,11 @@ textarea
 	padding-top -24px
 	padding-bottom 24px
 	line-height 1.1em
-	color transparent
-	background-color transparent
-	transition color 1500ms
-	-webkit-transition color 1500ms
-	-o-transition color 500ms
-	-moz-transition color ox-shadow 500ms
-	-ms-transition color 500ms
+	text-color green
 	outline none
 
 textarea:hover 
-	color white
+	color green
 	text-shadow #AAA 0px 0px 4px
 	
 .ban
@@ -56,7 +62,6 @@ textarea:hover
 
 .ban ul
 	list-style-type none
-	display inline
 	padding-right 0.5em
 
 .ban:hover 
@@ -67,12 +72,14 @@ textarea:hover
 
 .ban ul li
 	list-style-type none
-	display inline
 	padding-right 0.5em
 
 .ban ul li a
 	color transparent
 	text-shadow #555 0px 0px 2px
+
+.ban ul li a:hover
+	color #AAA
 	
 #banner 
 	position absolute

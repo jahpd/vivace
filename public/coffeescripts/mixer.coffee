@@ -1,14 +1,33 @@
 #some definitions
 #in form
 
-_mixerDef = () ->
-	this.pan = 0							
+# !DOC
+# Define a defaul mixer channel
+# @propertie float #{pan} 
+# @propertie float #{gain}
+_mixerChannelDef = () ->
+	# !DOC
+	# a value between -1 and 1
+	this.pan = 0		
+	#!DOC
+	# a value between 0 and 1					
 	this.gain = Math.sqrt(2)/2 
 	
-
+# !DOC
+# Static Object with some tools to routing audio channels
+# @propertie string #{_mixerDef}
+# @properite  function #{apply}
 RoutingMethods =
+	#!DOC
+	# _mixerDef a default method with "=>" tag separator
 	_mixerDef: 'src=>gain=>pan=>destination'
-	apply:(tree, mixer, def) -> 
+	
+	#!DOC
+	# apply an routing method with #{tree} object in #{mixer} with a specific #{def}
+	# @param tree a simple object of audionodes
+	# @param a mixer to put in the tree
+	# @param a string definition	
+	apply:(tree, mixer, def)->	 	
 		array = def.split('=>')
 		if array
 			_makeAudioNodes tree, mixer
@@ -51,40 +70,29 @@ _createSliders = (folder, mix, voicename, option, value) ->
 			control = folder.add mix, option, value.min, value.max
 			control.onChange = value.onChange
 
-#create a new gui
-gui = new dat.GUI()
+Vivace.mixer.router = (voicename, buffer, mxDef=_mixerDef, routingMethod=RoutingMethods._mixerDef) ->
+	#get audio src
+	voice = Vivace.voices[voicename]
+		
+	#create a src node with provided buffer
+	source = voice.audionodes.src = Vivace.audiocontext.createBufferSource();
+	voice.audionodes.src.buffer = buffer
+		
+	#to each audio parameter, create an appropriate AudioNode
+	_mix = new mxDef()
+	try
+		RoutingMethods.apply voice.audionodes, _mix, routingMethod
+		#return the mixerDefinition and audio chain	
+		{
+			'mixer': _mix
+			#return the configured voice.audionodes
+			'chain': voice.audionodes 
+		}
+	catch e
+		console.log e
 
-# vivace mixer
-# treat a class:
-mixer = 
-	#configure audio nodes
-	router: (voicename, buffer, mxDef=_mixerDef, routingMethod=RoutingMethods._mixerDef) ->
-		#get audio src
-		voice = Vivace.voices[voicename]
-		
-		#create a src node with provided buffer
-		source = voice.audionodes.src = Vivace.audiocontext.createBufferSource();
-		voice.audionodes.src.buffer = buffer
-		
-		#to each audio parameter, create an appropriate AudioNode
-		_mix = new mxDef()
-		try
-			RoutingMethods.apply voice.audionodes, _mix, routingMethod
-			#return the mixerDefinition and audio chain	
-			{
-				'mixer': _mix
-				#return the configured voice.audionodes
-				'chain': voice.audionodes 
-			}
-		catch e
-			console.log e
-		
-		
-	#create an mixer to specific voice in Vivace
-	createChannel: (voicename, options, createSliderCallback = _createSliders) ->
-		routing = Vivace.mixer.router voicename, options.buffer 
-		folder = gui.addFolder voicename	
-		$.each options, (option, value) -> createSliderCallback folder, routing.mixer, voicename, option, value
-					
-#expose
-window.Vivace.mixer = mixer
+#create an mixer to specific voice in Vivace
+Vivace.mixer.createChannel = (voicename, options, createSliderCallback = _createSliders) ->
+	routing = this.router voicename, options.buffer 
+	folder = Vivace.dat.addFolder voicename	
+	$.each options, (option, value) -> createSliderCallback folder, routing.mixer, voicename, option, value

@@ -1,0 +1,13 @@
+!!! 5
+
+head
+  title= title
+  - if stylesheet
+    each style in scripts
+      link(rel="stylesheet", href="#{style.src}")
+  - if scripts.length > 0
+    - for script in scripts
+      script(type="text/javascript", src="#{scripts[script].src}")  
+body
+  block content
+  

@@ -1,0 +1,21 @@
+exports layout
+
+block content
+  #login.divisor
+    | Login
+    #form
+      form(method='post')
+        div
+          input(type='text', name='name')
+          #variables
+            button#add Adicione variáveis no seu namespace!
+          input(type='submit', value='login')
+  script(type='text/javascript')
+    var i =0
+    $('#add').click(function(){
+      $('#variables').append(function(){
+        $var = $('<input/>').attr('type', 'text').attr('name', 'var'+i)
+        $val = $('<input/>').attr('type', 'text').attr('name', 'val'+i)
+        $('<div/>').attr('id', 'var_val'+i).append($var).append($val)
+      })
+    })

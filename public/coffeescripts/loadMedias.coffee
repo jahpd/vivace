@@ -1,9 +1,12 @@
-Vivace.loadMedias = (callback) ->
+Vivace.load = (type, callback) ->
 	#loop through provided environment
 	#get all mixer parameters
 	$.each Vivace.voices, (name, voice) ->
-		if voice.sigType=='audio' then callback name, voice, Vivace.loadAudioFile
-		if voice.sigType=='video' then callback name, voice, Vivace.loadVideoFile
+		if type == voice.sigType =='audio' then callback name, voice, Vivace.loadAudioFile
+		if type == voice.sigType=='video' then callback name, voice, Vivace.loadVideoFile
+		if voice.sigType=='graphics' 
+			processing.create(name, processing.SKETCHS)
+			callback name
 
 _options = (voicename, buffer) ->
 	sr = Vivace.audiocontext.sampleRate / 2
@@ -30,7 +33,7 @@ Vivace.loadAudioFile = (voicename, filename, callback, audioFilesDir='../../audi
 	request.onload = () -> Vivace.audiocontext.decodeAudioData request.response, (buffer) -> callback voicename, _options(voicename, buffer)					
 	request.onerror = () -> console.log 'error while loading audio file from ' + url
 	request.send()
-
+	
 Vivace.loadVideoFile = (voicename, filename, audioFilesDir='../../videos/') ->
 	vid = document.getElementsByTagName('video')[0];
 	vid.src = audioFilesDir + filename;

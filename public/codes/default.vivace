@@ -10,10 +10,8 @@
 // -position: the current position of an sample, [frame, second?] position
 // -dur: duration
 // -gdur: grain duration
-a.pos = [1, 2, 3, 4, 5]
-a.dur = [5, 4, 3, 2]
-a.gdur = [.1, .2, .3]
 
-b.pos = [2, 3, 4, 5]
-b.dur = [4, 3, 2]
-b.gdur = [.2, .3]
+// P5 is a processing instance; you can call with the many processing default values
+// that will running on livecoding
+
+ 
