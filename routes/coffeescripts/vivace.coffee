@@ -1,9 +1,6 @@
-
 #mongo = require 'mongoskin'
 #db = mongo.db('db://admin:admin@localhost:28017/test?auto_reconnect', {j: true})
-
 fs = require 'fs'
-
 express = require 'express'
 sharejs = require 'share'
 editor_server = sharejs.server
@@ -49,10 +46,7 @@ module.exports = () ->
 			
 		root: (req, res) ->	
 			console.log 'Vivace server response for /'
-			if !req.session.username
-				this.app.MENU.log = '/login'
-			else
-				this.app.MENU.log = '/logout'
+			if !req.session.username then this.app.MENU.log = '/login'else this.app.MENU.log = '/logout'
 			response = 
 				title: this.app.TITLE
 				menu: this.app.MENU
@@ -78,15 +72,12 @@ module.exports = () ->
 			o[item] = _list[_i] for item in list
 			o[item] = opt[_i] for item in opt
 			o
-			
-		developers: (req, res) ->
-			s = 'developers'
-			res.render s, result(s, 'aut0mata greenkobold cravelho gabiTume', {title: 'Vivace developers', src: 'http://github.com'})
 		
-		help: (req, res) ->
-			s = 'help'
-			res.render s, result(s, 'using forkus', {title: 'Vivace help'})
-		
-		test: () ->
-			# make proper tests and notify
-			assert = require('assert')
+		routes: (points, callback) -> 
+			for point in points.split ' '
+				funcname = point.split '/'[1]
+				callback point, this[funcname] ? new Error 'function #{funcname} not binded to vivace '
+				
+		# with exports.bind we an attach some custom functions
+		bind: (name, func=()->) -> this[name]=if typeof func is 'Function' then func else throw new Error 'bind method must receive a function as seond argument'
+	
