@@ -1,42 +1,56 @@
 fs = require 'fs'
 coffee = require 'coffee-script'
+path = require 'path'
 
-option '-o', '--output [DIR]', 'directory for compiled code'
-option '-c', '--compile [DIR]', 'compile code from here'
-option '-p', '--pole [DIRS...]', 'a version from -c, but with multiple directories; \n\tWARNING: you MUST use -po argument'
-option '-po', '--pole_output [DIRS...]', 'used with -p'
 option '-v', '--verbose', 'verbose mode'
 
+#a wrapper to tasks
 class Vivace
-	constructor: (@options) -> 
-		@verbose = (msg) -> @options.verbose ? console.log msg
-		@input = @options.pole ? @options.compile ? './'
-		@output = @options.pole_compile ? @options.compile ? './'
-		@normpath = (dir, file)-> dir=="./"?dir:"#{dir}/"
-		@write = (dir, file, code)-> fs.writeFile "#{dir}{file}.js", code
 	
-	readFiles: (dir, callback) ->callback file for file in dir for dir in fs.readdir "./#{dir}"
-	go: -> @readFiles @input, (dir, file) -> @code dir, file
-	go2: -> (@readFiles input, (dir, file) -> @code dir, file) for input in @inputs
-	modules: ->
-		@verbose "<======================>"
-		@verbose "compiling vivace modules..."	
-		codes = if typeof @input is 'string' then @go() else @go2
-		@verbose codes
-		if typeof inputs is 'string' then @write @input else @write() for input in inputs
-		@verbose "<======================>"
+	#typing Vivace.new options, you do a compiling process
+	constructor: (options, @version='0.1') ->
+		{@verbose} = options
+		@display = (msg) -> if @verbose then console.log "#{msg}\n"
+		@warn = (msg) -> if @verbose then console.log "!!! #{msg}\n"
+		@see = (msg) -> if @verbose then console.log "ooo #{msg}"
+		@log = (msg) -> if @verbose then console.log "-> #{msg}\n" 	
+		@display "======================="
+		@display "cake vivace version #{@version}"
+		@display "======================="	
+	
+	compile: (paths...) ->
+		_path = paths[0]
+		@log "get #{_path}"
+		data = fs.readFileSync _path, 'utf8'
 		
+		#now verify if we do thing to one argument or more
+		jsfilename = _path.split('.coffee')[0]
+		if paths[1] 
+			jsfilename = jsfilename.split('coffeescripts/')[1]
+			jsfilename = "#{paths[1]}/#{jsfilename}.js"
+		else
+			jsfilename = "#{jsfilename}.js"
+		@log "out #{jsfilename}"
+		code = coffee.compile data
+		fs.writeFile jsfilename, code
+			
+	read: (paths...) ->
+		if paths.length == 1
+			@compile "#{paths[0]}.coffee"
+		else
+			JSPATH = /coffee/g
+			for file in fs.readdirSync paths[0]
+				if JSPATH.test file
+					@compile "#{paths[0]}/#{file}", paths[1] 
+								 			
 	app: ->
-		@verbose "<======================>"
-		@verbose "compiling vivace app..."
-		fullpath = @normpath @input, 'app'
-		@verbose "parsing  #{fullpath}"
-		code = coffee.compile fullpath
-		@verbose "#{code}"
-		dir = @options.output ? './'
-		@write dir, 'app', code
-		@verbose "DONE #{fullpath}"
-		@verbose "<======================>"
+		@read './app' 
+		@log "DONE"
 	
+	folders: (folder) ->
+		@read "./#{folder}/coffeescripts", "./#{folder}/javascripts/vivace"
+		@log "DONE"
+
 task 'app', 'rebuild the Vivace application', (options) -> (new Vivace options).app()
-task 'modules', 'rebuild the Vivace modules', (options) -> (new Vivace options).modules()	
+task 'app:routes', 'rebuild the Vivace routes', (options) -> (new Vivace options).folders 'routes'
+task 'app:client', 'rebuild the Vivace client scripts', (options) -> (new Vivace options).folders 'public' 
