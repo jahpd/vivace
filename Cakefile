@@ -12,7 +12,7 @@ class Vivace
 		{@verbose} = options
 		@display = (msg) -> if @verbose then console.log "#{msg}\n"
 		@warn = (msg) -> if @verbose then console.log "!!! #{msg}\n"
-		@see = (msg) -> if @verbose then console.log "ooo #{msg}"
+		@see = (msg) -> if @verbose then console.log "--- #{msg} ---\n"
 		@log = (msg) -> if @verbose then console.log "-> #{msg}\n" 	
 		@display "======================="
 		@display "cake vivace version #{@version}"
@@ -31,26 +31,33 @@ class Vivace
 		else
 			jsfilename = "#{jsfilename}.js"
 		@log "out #{jsfilename}"
-		code = coffee.compile data
-		fs.writeFile jsfilename, code
-			
+		
+		try
+			code = coffee.compile data
+			fs.writeFile jsfilename, code
+		catch e
+			@warn "error on #{paths[0]}"
+			@see e
+
 	read: (paths...) ->
 		if paths.length == 1
 			@compile "#{paths[0]}.coffee"
 		else
-			JSPATH = /coffee/g
+			JSPATH = /(coffee)/
 			for file in fs.readdirSync paths[0]
 				if JSPATH.test file
-					@compile "#{paths[0]}/#{file}", paths[1] 
-								 			
+					@compile "#{paths[0]}/#{file}", paths[1] 					 			
 	app: ->
 		@read './app' 
 		@log "DONE"
 	
-	folders: (folder) ->
-		@read "./#{folder}/coffeescripts", "./#{folder}/javascripts/vivace"
+	folders: (folders...) ->
+		@read "./#{folders[0]}/#{folders[1]}", if !folders[2] then "./#{folders[0]}" else "./#{folders[0]}/#{folders[2]}"
 		@log "DONE"
+	
+	routes: -> @folders 'routes', 'coffeescripts'
+	client: -> @folders 'public', 'coffeescripts', 'javascripts'
 
 task 'app', 'rebuild the Vivace application', (options) -> (new Vivace options).app()
-task 'app:routes', 'rebuild the Vivace routes', (options) -> (new Vivace options).folders 'routes'
-task 'app:client', 'rebuild the Vivace client scripts', (options) -> (new Vivace options).folders 'public' 
+task 'app:routes', 'rebuild the Vivace routes', (options) -> (new Vivace options).routes()
+task 'app:client', 'rebuild the Vivace client scripts', (options) -> (new Vivace options).client()
