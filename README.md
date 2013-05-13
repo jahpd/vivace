@@ -51,17 +51,11 @@ Download nodejs and install it:
     $ make
     $ sudo make install
 
-Install vivace dependencies:
+Install vivace dependencies (see package.json to have an overview of dependencies and devDependencies):
 
     $ cd vivace/
-    $ npm install share express
-    $ npm install jade stylus
+    $ npm install    
 
-For developers, some conveniency:
-
-    $ npm install -g nodemon
-    $ npm install jison coffee-script
-     
 Run:
 
     $ node server.js
@@ -70,7 +64,7 @@ or for developing environment
 
     $ nodemon server.js
 
-Open [http://localhost:5000]() on your Chrome or Safari browser. You
+Open [http://localhost:3000]() on your Chrome or Safari browser. You
 can even share this URL with others and live code together.
 
 # Using your own audio/video files
@@ -83,3 +77,25 @@ And edit file public/coffeescripts/api.coffee, to map variable names to your fil
 
     Vivace.environment = [{name: 'a', fileName: 'kick.wav', type: 'audio'},
                  {name: 'b', fileName: 'foo.mp4', type: 'video'}]
+
+# The server (for developers)
+
+Our objective is to integrate vivace server with sharejs server (where the users type their own variables and functions, and can save then.
+
+The server is not complete. In this new version, we build our own [express](http://expressjs.org) server with some custom features:
+
+	- all files are write in coffeescript
+	- all files are compiled with our _Cakefile_
+
+_Cakefile_ is a helpful tool, compile in once all files, and return that with errors, instead to compile one by one with coffee command tool. (see file task.coffee)
+
+To view all options, type:
+
+	$ cd vivace
+	$ cake
+
+To compile, we separated some modules, _app_, _app:routes_, _app:client_:
+	
+	$cake -v app
+	$cake -v app:routes
+	$cake -v app:client

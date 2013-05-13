@@ -1,7 +1,5 @@
-server = require './routes/utils'
-
-# with @bind we can attach some custom functions
-server::bind = (name, func) -> this[name]=func
+fs = require 'fs'
+Server = require('./utils').Server
 
 ###
 # create a simple server with:
@@ -10,12 +8,12 @@ server::bind = (name, func) -> this[name]=func
 	- static menu
 		- title
 		- link reference
-		- client code response for that link reference
+		- inner link sugar codes!
 ###
 module.exports = () ->
 	folder = "public/javascripts"
-	clientScripts = "#{folder}/#{script}.js" for file in fs.readdir folder
-	new server 'vivace', clientScripts, menu = 
+	clientScripts = "#{folder}/#{file}.js" for file in fs.readdir folder
+	new Server 'vivace', clientScripts, menu = 
 		log:
 			title: 'log'
 			href: '/log'
