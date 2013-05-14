@@ -27,6 +27,12 @@ class Task
 	#generate a string of file with extension coffee
 	asJs: (file)-> @filedottext file, 'js'
 	
+	getAllFilesOf: (dir, ext, callback) ->
+		reg = new RegExp ext
+		for file in fs.readdirSync dir
+			if reg.test file
+				callback dir, file
+			
 	#generate a string of file reference in parent folder 
 	_2parentFolder: (folders) -> 
 		path = ""

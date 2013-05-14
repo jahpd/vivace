@@ -34,3 +34,5 @@ class VivaceServer
 			@app.use express.static path.join(__dirname, 'public')
 		if dev then @app.configure 'development', ()-> express_app.use express.errorHandler()
 		callback
+
+module.exports = (title, clientScripts, proto) -> new VivaceServer title, clientScripts, proto

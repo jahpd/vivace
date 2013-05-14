@@ -1,8 +1,12 @@
 vivace = require './routes/vivace'
+fs = require 'fs'
+Task = require('./routes/task').Task
 
-json = 
+t = new Task {verbose: true}
+
+app = vivace json =
 	client:
-		scripts: "#{folder}/#{file}.js" for file in fs.readdir 'public/javascripts'
+		scripts: (t.getAllFilesOf './public/javascripts', 'js', (folder, file) -> t._2folder folder, file)
 	mountpoints:
 		log_in_out:
 			title: 'login'
@@ -20,8 +24,6 @@ json =
 			title: 'log'
 			href: '/log'
 			code: 'codes/log.vivace'
-			
-app = vivace json
 
 vivace.configure () ->
 	vivace.bind 'root', (req, res) =>	
